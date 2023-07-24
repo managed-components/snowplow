@@ -1,0 +1,10 @@
+{
+  "name": "Snowplow",
+  "description": "Snowplow",
+  "namespace": "snowplow",
+  "icon": "",
+  "categories": ["Advertising"],
+  "provides": ["events"],
+  "allowCustomFields": true,
+  "permissions": {}
+}

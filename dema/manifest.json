@@ -1,0 +1,20 @@
+{
+  "name": "Managed Component Dema",
+  "namespace": "managed-component-dema",
+  "description": "A Managed Component for Dema server-side event tracking",
+  "icon": "assets/icon.svg",
+  "permissions": {
+    "access_client_kv": {
+      "description": "This permission is used to facilitate better a user experience.",
+      "required": true
+    },
+    "provide_ecommerce": {
+      "description": "This permission is used to facilitate better a user experience.",
+      "required": true
+    },
+    "provide_pageviews": {
+      "description": "This permission is used to facilitate better a user experience.",
+      "required": true
+    }
+  }
+}

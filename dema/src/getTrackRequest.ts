@@ -22,6 +22,8 @@ export const getTrackRequest = async (
   return new Request(endpoint, {
     headers: {
       'User-Agent': payload.ua ?? '',
+      'x-dema-ip': payload.ip ?? '',
+      'x-dema-user-agent': payload.ua ?? '',
     },
   })
 }

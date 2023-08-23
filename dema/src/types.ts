@@ -72,4 +72,5 @@ export interface DemaPayload {
   v: string
   _nc: string
   ua?: string
+  ip?: string
 }

@@ -29,6 +29,10 @@ export interface EventProduct {
   quantity: number
   size: string
   size_id: string
+  zaraz: {
+    product_id: string
+    sku: string
+  }
 }
 
 export interface DemaOrder {

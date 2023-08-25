@@ -22,8 +22,8 @@ export const getPageviewPayload = (
     e: 'pageview',
     i: settings.demaId,
     m: JSON.stringify({
-      id: event.payload.ecommerce?.sku ?? '',
-      productId: event.payload.ecommerce?.product_id ?? '',
+      id: event.payload?.ecommerce?.zaraz?.sku ?? '',
+      productId: event.payload?.ecommerce?.zaraz?.product_id ?? '',
       ip: event.client.ip,
       country: event.client.ip,
     }),
@@ -48,8 +48,8 @@ export const getOrderPayload = (
         tax: String(payload.tax ?? ''),
         voucher: '',
         products: payload.products.map(product => ({
-          id: String(product.sku ?? ''),
-          productId: String(product.product_id ?? ''),
+          id: String(product?.zaraz?.sku ?? ''),
+          productId: String(product?.zaraz?.product_id ?? ''),
           price: String(product.price ?? ''),
           quantity: product.quantity ?? 1,
         })),

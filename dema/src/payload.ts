@@ -25,7 +25,7 @@ export const getPageviewPayload = (
       id: event.payload?.ecommerce?.zaraz?.sku ?? '',
       productId: event.payload?.ecommerce?.zaraz?.product_id ?? '',
       ip: event.client.ip,
-      country: event.client.ip,
+      country: (event.payload?.ecommerce?.country || event.payload?.country  || "").toUpperCase() || event.client.ip,
     }),
   }
 }
@@ -35,6 +35,7 @@ export const getOrderPayload = (
   settings: ComponentSettings
 ): DemaPayload => {
   const payload: EventOrder = event.payload.ecommerce || event.payload
+  console.log('creating order payload', JSON.stringify({ event, settings }))
   return <DemaPayload>{
     ...commonPayload(event),
     e: 'order',
@@ -62,7 +63,7 @@ export const getOrderPayload = (
         },
       },
       ip: event.client.ip,
-      country: event.client.ip,
+      country: (payload.country || "").toUpperCase() || event.client.ip,
     }),
   }
 }

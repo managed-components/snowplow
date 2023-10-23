@@ -2,6 +2,7 @@ export interface EventOrder {
   order_id: string
   event: string
   currency: string
+  country: string
   total: number
   id: string
   revenue: number
@@ -29,6 +30,7 @@ export interface EventProduct {
   quantity: number
   size: string
   size_id: string
+  country: string
   zaraz: {
     product_id: string
     sku: string

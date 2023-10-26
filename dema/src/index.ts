@@ -38,6 +38,7 @@ export default function (manager: Manager, settings: ComponentSettings) {
       }
 
       default: {
+        console.log('Unknown ecommerce event: ', action, event)
         return
       }
     }

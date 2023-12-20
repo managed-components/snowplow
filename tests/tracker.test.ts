@@ -1,8 +1,17 @@
-import {createCore} from "../src/core";
-import {Tracker} from "../src/tracker";
-import {incrementEventIndex, updateFirstEventId, updateFirstEventTs, updateNowTs} from "../src/id";
+import { createCore } from "../src/core";
+import { Tracker } from "../src/tracker";
+import {
+  incrementEventIndex,
+  updateFirstEventId,
+  updateFirstEventTs,
+  updateNowTs,
+} from "../src/id";
+import crypto from "crypto";
+if (!global.crypto) {
+  vi.stubGlobal("crypto", crypto);
+}
 
-declare const jest: any;
+declare const vi: any;
 
 describe("Tracker", () => {
   let settings, event, core, tracker;
@@ -12,39 +21,40 @@ describe("Tracker", () => {
       appId: "test-app",
       namespace: "test",
       endpoint: "https://example.com",
-      platform: "web"
+      platform: "web",
     };
     event = {
       name: "Test Event",
       payload: {
         ecommerce: {
-          name: "Test Ecommerce Event"
-        }
+          name: "Test Ecommerce Event",
+        },
       },
       client: {
-        get: jest.fn(),
-        set: jest.fn(),
+        get: vi.fn(),
+        set: vi.fn(),
         url: {
-          href: "https://example.com"
+          href: "https://example.com",
         },
         referer: "",
         language: "en-US,en;q=0.5",
         title: "Example Domain",
         ip: "127.0.0.1",
-        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
-      }
+        userAgent:
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      },
     };
     const manager = {
-      addEventListener: jest.fn(),
-      fetch: jest.fn().mockResolvedValue(undefined as any)
+      addEventListener: vi.fn(),
+      fetch: vi.fn().mockResolvedValue(undefined as any),
     };
-    core = createCore({settings, manager} as any);
+    core = createCore({ settings, manager } as any);
     tracker = new Tracker(core, event);
   });
 
   describe("#init()", () => {
     it("should initialize variables", () => {
-      tracker.initVariables = jest.fn();
+      tracker.initVariables = vi.fn();
 
       tracker.init();
 
@@ -52,7 +62,7 @@ describe("Tracker", () => {
     });
 
     it("should initialize ID", () => {
-      tracker.initId = jest.fn();
+      tracker.initId = vi.fn();
 
       tracker.init();
 
@@ -60,7 +70,7 @@ describe("Tracker", () => {
     });
 
     it("should update cookies", () => {
-      tracker.updateCookies = jest.fn();
+      tracker.updateCookies = vi.fn();
 
       tracker.init();
 
@@ -85,38 +95,40 @@ describe("Tracker", () => {
         vid: "1",
         sid: "abc",
         uid: "user@example.com",
-        cx: "eyJzY2hlbWEiOiAiaWdsdTpjb20uc25vd3Bsb3dhbmFseXRpY3Muc25v"
+        cx: "eyJzY2hlbWEiOiAiaWdsdTpjb20uc25vd3Bsb3dhbmFseXRpY3Muc25v",
       });
 
-      expect(payload).toEqual(expect.objectContaining({
-        e: "pv",
-        duid: "123",
-        vid: "1",
-        sid: "abc",
-        uid: "user@example.com",
-        cx: "eyJzY2hlbWEiOiAiaWdsdTpjb20uc25vd3Bsb3dhbmFseXRpY3Muc25v",
-        url: "https://example.com",
-        refr: "",
-        page: "Example Domain",
-        eid: expect.any(String),
-        tv: "zaraz-1.0.0",
-        tna: "test",
-        aid: "test-app",
-        p: "web",
-        cookie: "1",
-        lang: "en-US",
-        dtm: expect.any(String),
-        stm: expect.any(String),
-        cs: "UTF-8",
-        res: "1440x900",
-        cd: "24",
-        vp: "1750x187",
-        ds: "1750x6747"
-      }));
+      expect(payload).toEqual(
+        expect.objectContaining({
+          e: "pv",
+          duid: "123",
+          vid: "1",
+          sid: "abc",
+          uid: "user@example.com",
+          cx: "eyJzY2hlbWEiOiAiaWdsdTpjb20uc25vd3Bsb3dhbmFseXRpY3Muc25v",
+          url: "https://example.com",
+          refr: "",
+          page: "Example Domain",
+          eid: expect.any(String),
+          tv: "zaraz-1.0.0",
+          tna: "test",
+          aid: "test-app",
+          p: "web",
+          cookie: "1",
+          lang: "en-US",
+          dtm: expect.any(String),
+          stm: expect.any(String),
+          cs: "UTF-8",
+          res: "1440x900",
+          cd: "24",
+          vp: "1750x187",
+          ds: "1750x6747",
+        })
+      );
     });
 
     it("should update ID", () => {
-      tracker.id.update = jest.fn();
+      tracker.id.update = vi.fn();
       tracker.track("pageview");
 
       expect(tracker.id.update).toHaveBeenCalledWith(
@@ -128,7 +140,7 @@ describe("Tracker", () => {
     });
 
     it("should update cookies", () => {
-      tracker.updateCookies = jest.fn();
+      tracker.updateCookies = vi.fn();
       tracker.track("pageview");
 
       expect(tracker.updateCookies).toHaveBeenCalled();
@@ -136,9 +148,12 @@ describe("Tracker", () => {
 
     it("should send payload to endpoint", async () => {
       tracker.track();
-      expect(tracker.core.getManager().fetch).toHaveBeenCalledWith(settings.endpoint + '/com.snowplowanalytics.snowplow/tp2', expect.objectContaining({
-        method: "POST",
-      }));
+      expect(tracker.core.getManager().fetch).toHaveBeenCalledWith(
+        settings.endpoint + "/com.snowplowanalytics.snowplow/tp2",
+        expect.objectContaining({
+          method: "POST",
+        })
+      );
     });
   });
 });

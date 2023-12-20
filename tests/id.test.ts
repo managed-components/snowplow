@@ -8,11 +8,15 @@ import {
   updateFirstEventId,
   updateFirstEventTs,
   updateEventIndex,
-  createIdManager
-} from '../src/id';
+  createIdManager,
+} from "../src/id";
+import crypto from "crypto";
+if (!global.crypto) {
+  vi.stubGlobal("crypto", crypto);
+}
 
-describe('getDefaultIdStructure', () => {
-  it('should return an array with default values', () => {
+describe("getDefaultIdStructure", () => {
+  it("should return an array with default values", () => {
     const expectedStructure = [
       expect.any(String), // UserId
       expect.any(String), // CreateTs
@@ -29,73 +33,167 @@ describe('getDefaultIdStructure', () => {
   });
 });
 
-describe('incrementVisitCount', () => {
-  it('should increment visit count by 1', () => {
-    const structure = ['user-id', '1234567890', '0'];
-    const expectedStructure = ['user-id', '1234567890', '1'];
+describe("incrementVisitCount", () => {
+  it("should increment visit count by 1", () => {
+    const structure = ["user-id", "1234567890", "0"];
+    const expectedStructure = ["user-id", "1234567890", "1"];
     const updatedStructure = incrementVisitCount()(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
 
-describe('updateNowTs', () => {
-  it('should update NowTs to current timestamp', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890'];
-    const expectedStructure = ['user-id', '1234567890', '0', expect.any(String)];
+describe("updateNowTs", () => {
+  it("should update NowTs to current timestamp", () => {
+    const structure = ["user-id", "1234567890", "0", "1234567890"];
+    const expectedStructure = [
+      "user-id",
+      "1234567890",
+      "0",
+      expect.any(String),
+    ];
     const updatedStructure = updateNowTs()(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
 
-describe('updateLastVisitTs', () => {
-  it('should update LastVisitTs to NowTs', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890', ''];
-    const expectedStructure = ['user-id', '1234567890', '0', '1234567890', '1234567890'];
+describe("updateLastVisitTs", () => {
+  it("should update LastVisitTs to NowTs", () => {
+    const structure = ["user-id", "1234567890", "0", "1234567890", ""];
+    const expectedStructure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "1234567890",
+    ];
     const updatedStructure = updateLastVisitTs()(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
 
-describe('updatePreviousSessionId', () => {
-  it('should update PreviousSessionId to SessionId', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', ''];
-    const expectedStructure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', 'session-id'];
+describe("updatePreviousSessionId", () => {
+  it("should update PreviousSessionId to SessionId", () => {
+    const structure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+    ];
+    const expectedStructure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "session-id",
+    ];
     const updatedStructure = updatePreviousSessionId()(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
 
-describe('updateSessionId', () => {
-  it('should generate a new SessionId', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id'];
+describe("updateSessionId", () => {
+  it("should generate a new SessionId", () => {
+    const structure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+    ];
     const updatedStructure = updateSessionId()(structure.slice());
     expect(structure[5]).not.toEqual(updatedStructure[5]);
   });
 });
 
-describe('updateFirstEventId', () => {
-  it('should update FirstEventId with the provided value', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', '', ''];
-    const expectedStructure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', '', 'first-event-id'];
-    const updatedStructure = updateFirstEventId('first-event-id')(structure);
+describe("updateFirstEventId", () => {
+  it("should update FirstEventId with the provided value", () => {
+    const structure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+      "",
+    ];
+    const expectedStructure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+      "first-event-id",
+    ];
+    const updatedStructure = updateFirstEventId("first-event-id")(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
 
-describe('updateFirstEventTs', () => {
-  it('should update FirstEventTs with the provided value', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', '', '', ''];
-    const expectedStructure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', '', '', '1234567890'];
-    const updatedStructure = updateFirstEventTs('1234567890')(structure);
+describe("updateFirstEventTs", () => {
+  it("should update FirstEventTs with the provided value", () => {
+    const structure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+      "",
+      "",
+    ];
+    const expectedStructure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+      "",
+      "1234567890",
+    ];
+    const updatedStructure = updateFirstEventTs("1234567890")(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
 
-describe('updateEventIndex', () => {
-  it('should update EventIndex with the provided value', () => {
-    const structure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', '', '', '1234567890', '0'];
-    const expectedStructure = ['user-id', '1234567890', '0', '1234567890', '', 'session-id', '', '', '1234567890', '1'];
-    const updatedStructure = updateEventIndex('1')(structure);
+describe("updateEventIndex", () => {
+  it("should update EventIndex with the provided value", () => {
+    const structure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+      "",
+      "1234567890",
+      "0",
+    ];
+    const expectedStructure = [
+      "user-id",
+      "1234567890",
+      "0",
+      "1234567890",
+      "",
+      "session-id",
+      "",
+      "",
+      "1234567890",
+      "1",
+    ];
+    const updatedStructure = updateEventIndex("1")(structure);
     expect(updatedStructure).toEqual(expectedStructure);
   });
 });
@@ -165,7 +263,7 @@ describe("createIdManager", () => {
         expect.any(String),
         "",
         "",
-        "0"
+        "0",
       ]);
     });
   });
@@ -185,7 +283,9 @@ describe("createIdManager", () => {
       manager.set(9, "0");
 
       const builtId = manager.build();
-      expect(builtId).toEqual("1234567890.abcdefg.1.1234567890.0987654321.asdfghjk.qwertyui...0");
+      expect(builtId).toEqual(
+        "1234567890.abcdefg.1.1234567890.0987654321.asdfghjk.qwertyui...0"
+      );
     });
   });
 });

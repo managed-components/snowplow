@@ -1,3 +1,8 @@
+import crypto from "crypto";
+if (!global.crypto) {
+  vi.stubGlobal("crypto", crypto);
+}
+
 //
 // import { MCEvent } from "@managed-components/types";
 // import {CreateTrackerCoreOptions, Id} from "../src/types";
@@ -91,62 +96,62 @@
 
 // core.test.js
 
-import {createCore} from '../src/core';
+import { createCore } from "../src/core";
 
-declare const jest: any;
+declare const vi: any;
 
 const options = {
-  settings: { endpoint: 'https://example.com', namespace: 'test' },
-  manager: { addEventListener: jest.fn(), fetch: jest.fn() }
+  settings: { endpoint: "https://example.com", namespace: "test" },
+  manager: { addEventListener: vi.fn(), fetch: vi.fn() },
 };
 
-describe('createCore', () => {
-  test('creates a core object with the expected methods', () => {
+describe("createCore", () => {
+  test("creates a core object with the expected methods", () => {
     const core = createCore(options as any);
 
-    expect(core).toHaveProperty('createIdManager');
-    expect(core).toHaveProperty('createCookieManager');
-    expect(core).toHaveProperty('createPageManager');
-    expect(core).toHaveProperty('createPayloadBuilder');
-    expect(core).toHaveProperty('getSettings');
-    expect(core).toHaveProperty('getManager');
+    expect(core).toHaveProperty("createIdManager");
+    expect(core).toHaveProperty("createCookieManager");
+    expect(core).toHaveProperty("createPageManager");
+    expect(core).toHaveProperty("createPayloadBuilder");
+    expect(core).toHaveProperty("getSettings");
+    expect(core).toHaveProperty("getManager");
   });
 });
 
-describe('createIdManager', () => {
-  test('creates an ID manager object', () => {
-    const idManager = createCore(options as any)
-      .createIdManager({} as any);
+describe("createIdManager", () => {
+  test("creates an ID manager object", () => {
+    const idManager = createCore(options as any).createIdManager({} as any);
 
     expect(idManager.set).toBeInstanceOf(Function);
     expect(idManager.get).toBeInstanceOf(Function);
   });
 });
 
-describe('createCookieManager', () => {
-  test('creates a cookie manager object', () => {
-    const cookieManager = createCore(options as any)
-      .createCookieManager({client: {url: { hostname: 'https://exmaple.com' }}} as any);
+describe("createCookieManager", () => {
+  test("creates a cookie manager object", () => {
+    const cookieManager = createCore(options as any).createCookieManager({
+      client: { url: { hostname: "https://exmaple.com" } },
+    } as any);
 
     expect(cookieManager.set).toBeInstanceOf(Function);
     expect(cookieManager.get).toBeInstanceOf(Function);
   });
 });
 
-describe('createPageManager', () => {
-  test('creates a page manager object', () => {
-    const pageManager = createCore(options as any)
-      .createPageManager({} as any);
+describe("createPageManager", () => {
+  test("creates a page manager object", () => {
+    const pageManager = createCore(options as any).createPageManager({} as any);
 
     expect(pageManager.set).toBeInstanceOf(Function);
     expect(pageManager.get).toBeInstanceOf(Function);
   });
 });
 
-describe('createPayloadBuilder', () => {
-  test('creates a payload builder object', () => {
-    const payloadBuilder = createCore(options as any)
-      .createPayloadBuilder({} as any);
+describe("createPayloadBuilder", () => {
+  test("creates a payload builder object", () => {
+    const payloadBuilder = createCore(options as any).createPayloadBuilder(
+      {} as any
+    );
 
     expect(payloadBuilder.common).toBeInstanceOf(Function);
     expect(payloadBuilder.build).toBeInstanceOf(Function);
@@ -154,16 +159,16 @@ describe('createPayloadBuilder', () => {
   });
 });
 
-describe('getSettings', () => {
-  test('returns the settings object passed to createCore', () => {
+describe("getSettings", () => {
+  test("returns the settings object passed to createCore", () => {
     const core = createCore(options as any);
 
     expect(core.getSettings()).toEqual(options.settings);
   });
 });
 
-describe('getManager', () => {
-  test('returns the manager object passed to createCore', () => {
+describe("getManager", () => {
+  test("returns the manager object passed to createCore", () => {
     const core = createCore(options as any);
 
     expect(core.getManager()).toEqual(options.manager);
